@@ -1,5 +1,6 @@
 package.path = package.path .. ";zzlib/?.lua"
-local dmi = require("dmiextract.dmi")
+local dmi = require("spesstools.dmi")
+local utils = require("spesstools.utils")
 local parser = require("argparse")(
 	"dmiextract",
 	"A tool to extract or compare BYOND .dmi files."
@@ -9,9 +10,9 @@ parser:mutex(
 	parser:flag("--raw-diff", "Extracts the IMD from both files and runs the diff command on them."),
 	parser:flag("--diff -d", "Compares the two DMI files metadata and outputs the differences."),
 	--parser:flag("--deep-diff -D", "Compares the two DMI files metadata and sprite data and outputs the differences."),
-	parser:flag("--full-extract -X", "Extacts the IMD and sprite data from the DMI"),
+	--parser:flag("--full-extract -X", "Extacts the IMD and sprite data from the DMI"),
 	parser:flag("--extract-imd -x", "Extracts just the IMD from a DMI file"),
-	parser:flag("--extract-sprites", "Extracts just the sprites from a DMI file"),
+	--parser:flag("--extract-sprites", "Extracts just the sprites from a DMI file"),
 	parser:flag("--json", "Extracts the IMD data in JSON form.")
 )
 
@@ -52,7 +53,7 @@ elseif args.raw_diff then
 	os.remove(tmp)
 elseif args.diff then
 	if #args.files ~= 2 then
-		error("not enough files")
+		utils.error("not enough files")
 	end
 	local changes = dmis[1]:diff(dmis[2])
 	for i=1, #changes do

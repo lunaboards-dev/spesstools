@@ -1,6 +1,7 @@
-local png = require("dmiextract.png")
+local png = require("spesstools.png")
 local zz = require("zzlib")
-local tga = require("dmiextract.targa")
+local tga = require("spesstools.targa")
+local utils = require("spesstools.utils")
 
 local unset = {}
 
@@ -331,7 +332,7 @@ local function dmi_parse(dat)
 end
 
 return function(path)
-	local h = assert(io.open(path, "rb"))
+	local h = utils.tryopen(path, "rb")--assert(io.open(path, "rb"))
 	local img = png(h)
 	for cnk, dat in img:chunks() do
 		--print(cnk, #dat)
@@ -340,7 +341,7 @@ return function(path)
 			local tag = dat:sub(1, tag_end-1)
 			local mode = dat:byte(tag_end+1)
 			if (mode ~= 0) then
-				error("bad stream")
+				utils.error(path..": bad stream")
 			end
 			if tag == "Description" then
 				local cdat = dat:sub(tag_end+2)
@@ -355,5 +356,5 @@ return function(path)
 		end
 	end
 	h:close()
-	error("not a dmi")
+	utils.error(path..": not a dmi")
 end

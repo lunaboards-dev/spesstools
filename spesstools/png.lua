@@ -1,4 +1,5 @@
 local zz = require("zzlib")
+local utils = require("spesstools.utils")
 
 local signature = "\x89PNG\r\n\x1a\n"
 local chdr = ">Ic4"
@@ -13,7 +14,7 @@ function file:chunks()
 		local dat = self.h:read(len)
 		local crc = string.unpack(">I", self.h:read(4))
 		if not have_ihdr and cnk ~= "IHDR" then
-			error("bad file (expected IHDR, got `"..cnk.."`)")
+			utils.error("bad file (expected IHDR, got `"..cnk.."`)")
 		end
 		have_ihdr = true
 		if cnk == "IEND" then
@@ -147,14 +148,14 @@ local samples = {
 
 return function(h)
 	if h:read(#signature) ~= signature then
-		error("bad png")
+		utils.error("bad png")
 	end
 	local img = setmetatable({h=h}, {__index=file})
 	for cnk, dat in img:chunks() do
 		if cnk == "IHDR" then
 			img.width, img.height, img.depth, img.ctype, img.comp, img.filter, img.interlace = ihdr:unpack(dat)
 			img.bpp = img.depth/8
-			if img.bpp//1 ~= img.bpp then error("i cannot be assed to support this") end
+			if img.bpp//1 ~= img.bpp then utils.error("i cannot be assed to support this") end
 			img.bpp = img.bpp * samples[img.ctype]
 			break
 		end

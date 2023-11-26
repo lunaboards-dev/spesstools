@@ -1,4 +1,4 @@
-local targa = require("dmiextract.targa")
+local targa = require("spesstools.targa")
 local function solve(w, h, func)
 	local res = {}
 	for y=1, h do

@@ -1,6 +1,6 @@
 package.path = package.path .. ";zzlib/?.lua"
-local png = require("dmiextract.png")
-local targa = require("dmiextract.targa")
+local png = require("spesstools.png")
+local targa = require("spesstools.targa")
 
 local h = io.open(arg[1], "rb")
 local i = png(h)
