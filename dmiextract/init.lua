@@ -49,7 +49,10 @@ elseif args.raw_diff then
 		f:close()
 		table.insert(file_names, path)
 	end
-	os.execute("diff "..table.concat(file_names, " "))
+	--utils.warning()
+	if select(3, os.execute("diff "..table.concat(file_names, " "))) > 1 then
+		utils.warning("diff failed! do you have it installed?")
+	end
 	os.remove(tmp)
 elseif args.diff then
 	if #args.files ~= 2 then
